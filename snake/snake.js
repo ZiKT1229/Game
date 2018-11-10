@@ -2,6 +2,7 @@ var canvas = document.getElementById("game");
 var context = canvas.getContext('2d');
 const grid = 16;
 var count = 0;
+var autoFlag = true;
 
 class Snake {
     constructor() {
@@ -76,6 +77,24 @@ class Snake {
             this._dx = 0;
         }
     }
+    get x() {
+        return this._x;
+    }
+    get y() {
+        return this._y;
+    }
+    get dx() {
+        return this._dx;
+    }
+    get dy() {
+        return this._dy;
+    }
+    set dx(dx) {
+        this._dx = dx;
+    }
+    set dy(dy) {
+        this._dy = dy;
+    } 
 }
 
 class Apple {
@@ -103,6 +122,70 @@ const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+const autoControl = () => {
+    if (snake.x > apple.x) {
+        if (snake.y > apple.y) {
+            if (snake.dx === 0) {
+                snake.dx = -grid;
+                snake.dy = 0;
+            } else if (snake.dy === 0) {
+                snake.dy = -grid;
+                snake.dx = 0;
+            }
+        } else if (snake.y < apple.y) {
+            if (snake.dx === 0) {
+                snake.dx = -grid;
+                snake.dy = 0;
+            } else if (snake.dy === 0) {
+                snake.dy = grid;
+                snake.dx = 0;
+            }
+        } else {
+            if (snake.dx === 0) {
+                snake.dx = -grid;
+                snake.dy = 0;
+            }
+        }
+    } 
+    else if (snake.x < apple.x) {
+        if (snake.y > apple.y) {
+            if (snake.dx === 0) {
+                snake.dx = grid;
+                snake.dy = 0;
+            } else if (snake.dy === 0) {
+                snake.dy = -grid;
+                snake.dx = 0;
+            }
+        } else if (snake.y < apple.y) {
+            if (snake.dx === 0) {
+                snake.dx = grid;
+                snake.dy = 0;
+            } else if (snake.dy === 0) {
+                snake.dy = grid;
+                snake.dx = 0;
+            }
+        } else {
+            if (snake.dx === 0) {
+                snake.dx = grid;
+                snake.dy = 0;
+            }
+        }
+    }
+    else if (snake.x === apple.x) {
+        if (snake.y > apple.y) {
+            if (snake.dy === 0) {
+                snake.dy = -grid;
+                snake.dx = 0;
+            }
+        } else if (snake.y < apple.y) {
+            if (snake.dy === 0) {
+                snake.dy = grid;
+                snake.dx = 0;
+            }
+        }
+    }
+};
+
 const animation = () => {
     requestAnimationFrame(animation);
     if (++count < 4) {
@@ -117,6 +200,10 @@ const animation = () => {
     apple.drawApple();
 
     snake.drawSnake();
+
+    if (autoFlag === true) {
+        autoControl();
+    }
 };
 
 document.addEventListener('keydown', function(e) {
