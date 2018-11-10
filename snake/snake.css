@@ -16,3 +16,8 @@ div {
     border-color: yellowgreen palevioletred;
     padding: 1px;
 }
+
+aside {
+    position: fixed;
+    top: 0;
+}
