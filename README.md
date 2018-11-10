@@ -11,4 +11,4 @@ The snake game:
 
 ![alt text](snake/play.png)
 
-看起來差不多，但是程式碼做了許多修改
+看起來差不多，但是程式碼做了整理
