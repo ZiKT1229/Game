@@ -12,3 +12,7 @@ The snake game:
 ![alt text](snake/play.png)
 
 看起來差不多，但是程式碼做了整理
+
+11/11 新增功能:開始 暫停 自動 分數
+
+![alt text](snake/play2.png)
