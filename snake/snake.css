@@ -3,6 +3,7 @@
     font-size: 40px;
     color: white;
     font-family: 'Times New Roman', Times, serif;
+    text-align: center;
 }
 
 canvas {
@@ -21,7 +22,7 @@ div {
 aside {
     position: fixed;
     top: 0;
-    left: 50px;
+    left: 300px;
 }
 
 input {
