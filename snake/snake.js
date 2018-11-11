@@ -2,8 +2,12 @@ var canvas = document.getElementById("game");
 var context = canvas.getContext('2d');
 const grid = 16;
 var count = 0;
-var autoFlag = true;
 
+var button = document.getElementsByTagName("input");
+var score = document.getElementById('score');
+var startFlag = false;
+var stopFlag = false;
+var autoFlag = false;
 class Snake {
     constructor() {
         this._x = getRandomInt(0, 25) * grid;
@@ -20,6 +24,7 @@ class Snake {
 
             if (cell.x === apple.x && cell.y === apple.y) {
                 snake._length++;
+                score.innerHTML = 'Length: ' + snake._length;
                 apple.newApple();
             }
             
@@ -29,6 +34,7 @@ class Snake {
                     snake._y = getRandomInt(0, 25) * grid;
                     snake._cells = [];
                     snake._length = 1;
+                    score.innerHTML = 'Length: ' + snake._length;
                     snake._dx = grid;
                     snake._dy = 0;
                     apple.newApple();
@@ -126,74 +132,76 @@ const autoControl = () => {
     if (snake.x > apple.x) {
         if (snake.y > apple.y) {
             if (snake.dx === 0) {
-                snake.dx = -grid;
-                snake.dy = 0;
+                snake.turn(37);
             } else if (snake.dy === 0) {
-                snake.dy = -grid;
-                snake.dx = 0;
+                snake.turn(38);
             }
         } else if (snake.y < apple.y) {
             if (snake.dx === 0) {
-                snake.dx = -grid;
-                snake.dy = 0;
+                snake.turn(37);
             } else if (snake.dy === 0) {
-                snake.dy = grid;
-                snake.dx = 0;
+                snake.turn(40);
             }
         } else {
             if (snake.dx === 0) {
-                snake.dx = -grid;
-                snake.dy = 0;
+                snake.turn(37);
             }
         }
     } 
     else if (snake.x < apple.x) {
         if (snake.y > apple.y) {
             if (snake.dx === 0) {
-                snake.dx = grid;
-                snake.dy = 0;
+                snake.turn(39);
             } else if (snake.dy === 0) {
-                snake.dy = -grid;
-                snake.dx = 0;
+                snake.turn(38);
             }
         } else if (snake.y < apple.y) {
             if (snake.dx === 0) {
-                snake.dx = grid;
-                snake.dy = 0;
+                snake.turn(39);
             } else if (snake.dy === 0) {
-                snake.dy = grid;
-                snake.dx = 0;
+                snake.turn(40);
             }
         } else {
             if (snake.dx === 0) {
-                snake.dx = grid;
-                snake.dy = 0;
+                snake.turn(39);
             }
         }
     }
     else if (snake.x === apple.x) {
         if (snake.y > apple.y) {
             if (snake.dy === 0) {
-                snake.dy = -grid;
-                snake.dx = 0;
+                snake.turn(38);
             }
         } else if (snake.y < apple.y) {
             if (snake.dy === 0) {
-                snake.dy = grid;
-                snake.dx = 0;
+                snake.turn(40);
             }
         }
     }
 };
 
+const drawMap = () => {
+    context.fillStyle = 'pink';
+    for (let row = 0; row < 25; row++) {
+        for (let col = 0; col < 25; col++) {
+            context.fillRect(row*16, col*16, grid-1, grid-1);
+        }
+    }
+};
+
 const animation = () => {
-    requestAnimationFrame(animation);
+    if (stopFlag === false) {
+        requestAnimationFrame(animation);
+    }
+
     if (++count < 4) {
         return;
     }
 
     count = 0;
     context.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawMap();
 
     snake.move();
 
@@ -206,10 +214,45 @@ const animation = () => {
     }
 };
 
+
+const resume = () => {
+    //start
+    if (startFlag === false) {
+        requestAnimationFrame(animation);
+        button[0].setAttribute("value", "Resume");
+        startFlag = true;
+    }
+    //resume
+    if (stopFlag === true) {
+        stopFlag = false;
+        button[0].style.background = '#ffffff';
+        button[1].style.background = '#ffffff1a';
+        requestAnimationFrame(animation);
+    }
+};
+
+const stop = () => {
+    if (startFlag === true && stopFlag === false) {
+        stopFlag = true;
+        button[0].style.background = '#ffffff1a';
+        button[1].style.background = '#ffffff';
+    }
+};
+
+const auto = () => {
+    if (autoFlag === false) {
+        autoFlag = true;
+        button[2].style.background = '#ffffff';
+    } else {
+        autoFlag = false;
+        button[2].style.background = '#ffffff1a';
+    }
+};
+
 document.addEventListener('keydown', function(e) {
     snake.turn(e.which);
 });
 
 var snake = new Snake();
 var apple = new Apple();
-requestAnimationFrame(animation);
+drawMap();
